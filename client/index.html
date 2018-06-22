@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+	
+		<style>
+
+			body {margin:0;overflow:hidden;background-color:black;user-select:none;}
+
+			#scoreboard {
+				background-color: white;
+				color:black;
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				margin:10px;
+				padding:10px;
+			}
+
+			#portal {
+				background-color: white;
+				color:black;
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				margin:10px;
+				padding:10px;
+			}
+
+		</style>
+
+		<script id="target-vs" type="x-shader/x-vertex">
+
+			uniform vec3 uCamPos;
+
+			attribute vec4 color;
+
+			varying float ps;
+
+			varying vec4 vColor;
+
+			void main() {
+
+				vColor = color;
+
+				vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+
+				ps = -10000.0 / (mvPosition.z);
+
+				gl_PointSize = ps;
+
+				gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+			}
+
+		</script>
+
+		<script id="target-fs" type="x-shader/x-fragment">
+
+			varying float ps;
+
+			varying vec4 vColor;
+
+			void main() {
+
+				vec2 meh = gl_PointCoord.xy * ps;
+
+				float f = 0.0;
+
+				if(meh.x < 2.0) f = 1.0;
+				if(meh.x > ps - 2.0) f = 1.0;
+				if(meh.y < 2.0) f = 1.0;
+				if(meh.y > ps - 2.0) f = 1.0;
+
+				float hu = .25 * ps;
+
+				if(meh.x > hu && meh.x < ps-hu) f = 0.0;
+				if(meh.y > hu && meh.y < ps-hu) f = 0.0;
+
+				gl_FragColor = f * vColor;
+
+			}
+
+		</script>
+
+		
+<script id="shield-vs" type="x-shader/x-vertex">
+
+	uniform vec3 uViewVector;
+	uniform vec3 uHitPos[64];
+	uniform float uHitTime[64];
+	uniform float uTime;
+	uniform float uPower;
+	uniform mat3 uMyMat;
+	varying float uFog;
+	varying vec3 vColor;
+	
+	void main() {
+	
+		vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+	
+		gl_Position = projectionMatrix * mvPosition;
+			vec3 vNormal = normalize(uMyMat * normal);
+		
+		vec3 vNormel = normalize(uViewVector);
+		
+		vec3 tone = vec3(1.0 - uPower, uPower * 0.5, uPower);
+
+		float intensity = pow(1.0 - dot(vNormal, vNormel), 2.0);
+		
+		float am = 0.0;
+			
+		for(int i = 0; i < 64; i++) {
+			
+			vec3 hit = normalize(-uHitPos[i]);
+			
+			float dt = 1.0 - (uTime - uHitTime[i])/1000.0;
+					
+			float a = pow(max(0.0,dot(hit, uMyMat * position)),2.0) * dt;
+					
+			am = max(a, am);
+			
+		}
+		
+		
+		vColor = tone * intensity + vec3(am,am,am);
+		
+		
+	}
+	
+	</script>
+	<script id="shield-fs" type="x-shader/x-fragment">
+	
+	precision highp float;
+	precision highp int;
+	
+	varying vec3 vColor;
+	
+	void main() {
+		
+		gl_FragColor = vec4(vColor, 1.0);
+	
+	}
+	
+	</script>
+	
+	
+		
+		<script src="three.min.js"></script>
+		<script src="controls.js"></script>
+		<script src="socket.js"></script>
+		<script src="display.js"></script>
+		<script src="controls.js"></script>
+		<script src="scoreboard.js"></script>
+		<script src="main.js"></script>
+		
+	</head>
+	
+	<body onload="init()">
+ 
+		<div id="display"></div>
+
+		<div id="hud" style="position: fixed; right: 0px; top: 0px; color: white; padding:10px;">
+
+			<div id="projectiles">250</div>
+
+			<div id="missiles">10</div>
+
+		</div>
+		
+		<div style="width:20px;height:20px;margin-left:-10px;margin-top:-10px;border:1px solid red;border-radius:20px;position:fixed;top:50%;left:50%;"></div>
+		<div style="position:fixed;top:10px;right:10px;color:white;" id="hugo"></div>
+
+		<div id="scoreboard"></div>
+
+		<div id="portal">
+			<select name="type" id"portal-gametype-select">
+				<option value="1">Asteroid Rage</option>
+				<option value="2"></option>
+			</select>
+			<input type="text" name="name" id="portal-name-input" />
+			<button type="button" id="portal-submit">play</button>
+		</div>
+		
+	</body>
+
+</html>
