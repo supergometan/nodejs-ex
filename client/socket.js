@@ -2,7 +2,7 @@ var Socket = function() {
 
 	var scope = this
 
-	var socket = new WebSocket("ws://"+window.location.hostname+":8000")
+	var socket = new WebSocket("ws://"+RAGE.Server_IP+":8000")
 
 	socket.addEventListener("open", onSocketOpen, false)
 

@@ -1,5 +1,5 @@
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
-    ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
+    ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
     mongoURLLabel = "";
 
@@ -22,7 +22,17 @@ var httpServer = http.createServer(function(req, res){
 			res.statusCode = 404
 			res.end(error.toString())
 		}
-		else res.end(data)
+		else {
+			
+			if(req.url == "/index.html") {
+    
+        data =  data.toString().replace("###IP###", ip)
+    
+			}
+			
+			res.end(data)
+			
+		}
 	
 	})
 	
