@@ -4,7 +4,7 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     mongoURLLabel = "";
 
 
-//var WebSocketServer = require("ws").Server
+var WebSocketServer = require("ws").Server
 
 var http = require("http")
 
@@ -26,11 +26,11 @@ var httpServer = http.createServer(function(req, res){
 	
 }).listen(port, ip)
 
-//var webSocketServer = new WebSocketServer({server:httpServer})
+var webSocketServer = new WebSocketServer({server:httpServer})
 
-//var gameServer = new GameServer()
+var gameServer = new GameServer()
 
-/*webSocketServer.on("connection", function(socket) {
+webSocketServer.on("connection", function(socket) {
 
 	var client = gameServer.createClient(socket)
 
@@ -48,7 +48,7 @@ var httpServer = http.createServer(function(req, res){
 		
 	})
 	
-})*/
+})
 
 /*
 //  OpenShift sample Node application
