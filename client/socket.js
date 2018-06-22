@@ -2,7 +2,7 @@ var Socket = function() {
 
 	var scope = this
 
-	var socket = new WebSocket("ws://localhost:8080")
+	var socket = new WebSocket("ws://localhost:8000")
 
 	socket.addEventListener("open", onSocketOpen, false)
 
