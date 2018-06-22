@@ -24,13 +24,15 @@ var httpServer = http.createServer(function(req, res){
 			res.end(error.toString())
 		}
 		else {
-			/*
+			
 			if(req.url == "/index.html") {
+				
+				var str = data.toString()
     
-				data =  data.toString().replace("###IP###", ip)
+				data = str.replace("###IP###", ip)
     
 			}
-			*/
+			
 			res.end(data)
 			
 		}
