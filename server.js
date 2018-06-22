@@ -3,6 +3,8 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
     mongoURLLabel = "";
 
+var GameServer = require("./server/gameserver")
+
 
 var WebSocketServer = require("ws").Server
 
