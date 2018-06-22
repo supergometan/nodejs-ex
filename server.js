@@ -5,6 +5,7 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
 
 var GameServer = require("./server/gameserver")
 
+console.log(ip)
 
 var WebSocketServer = require("ws").Server
 
@@ -23,13 +24,13 @@ var httpServer = http.createServer(function(req, res){
 			res.end(error.toString())
 		}
 		else {
-			
+			/*
 			if(req.url == "/index.html") {
     
 				data =  data.toString().replace("###IP###", ip)
     
 			}
-			
+			*/
 			res.end(data)
 			
 		}
