@@ -26,7 +26,7 @@ var httpServer = http.createServer(function(req, res){
 			
 			if(req.url == "/index.html") {
     
-        data =  data.toString().replace("###IP###", ip)
+				data =  data.toString().replace("###IP###", ip)
     
 			}
 			
