@@ -44,7 +44,7 @@ var httpServer = http.createServer(function(req, res){
 	
 }).listen(port, ip)
 
-var webSocketServer = new WebSocketServer({port:443,address:"0.0.0.0"})
+var webSocketServer = new WebSocketServer({port:8443,address:"0.0.0.0"})
 
 var gameServer = new GameServer()
 
