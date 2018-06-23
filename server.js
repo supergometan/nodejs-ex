@@ -2,69 +2,7 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
     mongoURLLabel = "";
-/*
-var GameServer = require("./server/gameserver")
 
-console.log(ip)
-
-var WebSocketServer = require("ws").Server
-
-var http = require("http")
-
-var fs = require("fs")
-
-var httpServer = http.createServer(function(req, res){
-	
-	if(req.url == "/") req.url = "/index.html"
-	
-	fs.readFile(__dirname + "/client" + req.url, function(error,data){
-	
-		if(error) {
-			res.statusCode = 404
-			res.end(error.toString())
-		}
-		else {
-			
-			if(req.url == "/index.html") {
-				
-				var str = data.toString()
-    
-				data = str.replace("###IP###", ip)
-    
-			}
-			
-			res.end(data)
-			
-		}
-	
-	})
-	
-}).listen(port, ip)
-
-var webSocketServer = new WebSocketServer({server:httpServer})
-
-var gameServer = new GameServer()
-
-webSocketServer.on("connection", function(socket) {
-
-	var client = gameServer.createClient(socket)
-
-	socket.on("close", function(code){
-
-		gameServer.removeClient(client)
-		
-	})
-	
-	socket.on("message", function(message){
-
-		message = JSON.parse(message)
-
-		gameServer.processMessage(client, message)
-		
-	})
-	
-})
-*/
 //  OpenShift sample Node application
 var express = require('express'),
     app     = express(),
@@ -74,6 +12,8 @@ Object.assign=require('object-assign')
 
 app.engine('html', require('ejs').renderFile);
 app.use(morgan('combined'))
+
+app.use(express.static('client'))
 
 if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
   var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
@@ -166,5 +106,79 @@ initDb(function(err){
 
 app.listen(port, ip);
 console.log('Server running on http://%s:%s', ip, port);
+
+
+
+
+
+
+
+
+
+var GameServer = require("./server/gameserver")
+
+var WebSocketServer = require("ws").Server
+
+var http = require("http")
+
+var fs = require("fs")
+
+
+/*
+var httpServer = http.createServer(function(req, res){
+	
+	if(req.url == "/") req.url = "/index.html"
+	
+	fs.readFile(__dirname + "/client" + req.url, function(error,data){
+	
+		if(error) {
+			res.statusCode = 404
+			res.end(error.toString())
+		}
+		else {
+			
+			if(req.url == "/index.html") {
+				
+				var str = data.toString()
+    
+				data = str.replace("###IP###", ip)
+    
+			}
+			
+			res.end(data)
+			
+		}
+	
+	})
+	
+}).listen(port, ip)
+*/
+
+var webSocketServer = new WebSocketServer({port:8000,address:"0.0.0.0"})
+
+var gameServer = new GameServer()
+
+webSocketServer.on("connection", function(socket) {
+
+	var client = gameServer.createClient(socket)
+
+	socket.on("close", function(code){
+
+		gameServer.removeClient(client)
+		
+	})
+	
+	socket.on("message", function(message){
+
+		message = JSON.parse(message)
+
+		gameServer.processMessage(client, message)
+		
+	})
+	
+})
+
+
+
 
 module.exports = app ;
