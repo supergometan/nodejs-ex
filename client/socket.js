@@ -2,7 +2,7 @@ var Socket = function() {
 
 	var scope = this
 
-	var socket = new WebSocket("ws://"+window.location.hostname+":8000")
+	var socket = new WebSocket("ws://"+window.location.hostname+":443")
 
 	socket.addEventListener("open", onSocketOpen, false)
 
